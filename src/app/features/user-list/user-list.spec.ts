@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, throwError, Subject } from 'rxjs';
 import { UserListComponent } from './user-list';
 import { UserCardComponent } from '../user-card/user-card';
 import { UserService } from '../../core/services/user.service';
@@ -31,13 +31,22 @@ describe('UserListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display loading message when users are empty', () => {
-    mockUserService.getUsers = () => of([]);
+  it('should display loading message when users are loading', () => {
+    mockUserService.getUsers = () => new Subject<User[]>();
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
     const loadingElement = compiled.querySelector('p');
     expect(loadingElement?.textContent).toContain('Loading users...');
+  });
+
+  it('should display empty message when loading is complete and users list is empty', () => {
+    mockUserService.getUsers = () => of([]);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const emptyElement = compiled.querySelector('.no-users');
+    expect(emptyElement?.textContent).toContain('No users available.');
   });
 
   it('should load and render users on init', () => {

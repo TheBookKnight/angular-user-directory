@@ -31,4 +31,26 @@ test.describe('User Card Component E2E', () => {
     await expect(websiteLink).toHaveAttribute('href', 'https://hildegard.org');
     await expect(websiteLink).toHaveText('hildegard.org');
   });
+
+  test('should display empty message when user list is empty', async ({ page }) => {
+    // Mock the API response to return an empty array
+    await page.route('**/users', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify([]),
+      });
+    });
+
+    await page.goto('/');
+
+    // Verify empty state message is visible and has correct text
+    const noUsers = page.locator('.no-users');
+    await expect(noUsers).toBeVisible({ timeout: 10000 });
+    await expect(noUsers).toHaveText('No users available.');
+
+    // Ensure no cards are rendered
+    const cards = page.locator('app-user-card');
+    await expect(cards).toHaveCount(0);
+  });
 });

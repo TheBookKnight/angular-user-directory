@@ -19,17 +19,21 @@ export class UserListComponent implements OnInit {
 
   users: User[] = [];
   errorMessage = '';
+  isLoading = true;
 
   // Fetches users on component initialization
   ngOnInit() {
+    this.isLoading = true;
     this.userService.getUsers().subscribe({
       next: (users) => {
         this.users = users;
+        this.isLoading = false;
         this.cdr.markForCheck();
         console.debug('Loaded users:', users);
       },
       error: (err) => {
         this.errorMessage = err.message || 'Failed to load users';
+        this.isLoading = false;
         this.cdr.markForCheck();
         console.error(err);
       }

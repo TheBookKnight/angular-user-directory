@@ -1,0 +1,35 @@
+.user-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+}
+
+.user-name {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1.2rem;
+  color: #1e293b;
+}
+
+.user-info p {
+  margin: 0.35rem 0;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.user-info a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.user-info a:hover {
+  text-decoration: underline;
+}

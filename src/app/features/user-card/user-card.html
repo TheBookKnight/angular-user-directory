@@ -1,0 +1,12 @@
+@if (user) {
+<div class="user-card">
+  <h3 class="user-name">{{ user.name }}</h3>
+  <div class="user-info">
+    <p><strong>Email: </strong> <a [href]="'mailto:' + user.email">{{ user.email }}</a></p>
+    <p><strong>Phone: </strong> {{ user.phone }}</p>
+    <p><strong>Website: </strong> <a [href]="'https://' + user.website" target="_blank" rel="noopener noreferrer">{{
+        user.website }}</a></p>
+    <p><strong>Company: </strong> {{ user.company.name }}</p>
+  </div>
+</div>
+}

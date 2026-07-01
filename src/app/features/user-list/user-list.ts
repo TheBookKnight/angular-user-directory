@@ -7,7 +7,6 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../../models/user.model';
-
 @Component({
   selector: 'app-user-list',
   standalone: false,

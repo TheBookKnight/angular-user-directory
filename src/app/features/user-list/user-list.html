@@ -6,8 +6,11 @@
   } @else {
     <ul>
       @for (user of users; track user.id) {
-        <li>{{ user.name }} ({{ user.email }})</li>
+        <li>
+          <app-user-card [user]="user"></app-user-card>
+        </li>
       }
     </ul>
   }
 </div>
+

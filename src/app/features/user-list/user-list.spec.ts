@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { UserListComponent } from './user-list';
+import { UserCardComponent } from '../user-card/user-card';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../../models/user.model';
 
@@ -15,7 +16,7 @@ describe('UserListComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [UserListComponent],
+      declarations: [UserListComponent, UserCardComponent],
       providers: [
         { provide: UserService, useValue: mockUserService }
       ]
@@ -47,9 +48,9 @@ describe('UserListComponent', () => {
         username: 'alice',
         email: 'alice@example.com',
         address: { street: '', suite: '', city: '', zipcode: '', geo: { lat: '', lng: '' } },
-        phone: '',
-        website: '',
-        company: { name: '', catchPhrase: '', bs: '' }
+        phone: '123-456-7890',
+        website: 'alice.com',
+        company: { name: 'Alice Corp', catchPhrase: '', bs: '' }
       }
     ];
 
@@ -61,7 +62,11 @@ describe('UserListComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const listItems = compiled.querySelectorAll('li');
     expect(listItems.length).toBe(1);
-    expect(listItems[0].textContent).toContain('Alice (alice@example.com)');
+
+    const userCard = compiled.querySelector('app-user-card');
+    expect(userCard).toBeTruthy();
+    expect(userCard?.textContent).toContain('Alice');
+    expect(userCard?.textContent).toContain('alice@example.com');
   });
 
   it('should handle error and display error message when loading fails', () => {
@@ -76,3 +81,4 @@ describe('UserListComponent', () => {
     expect(errorElement?.textContent).toContain('Failed to fetch users');
   });
 });
+

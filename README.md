@@ -1,59 +1,180 @@
-# AngularUserDirectory
+# Angular User Directory
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.18.
+A clean, production-ready Angular application demonstrating directory search and presentation. The application fetches user profiles from the external JSONPlaceholder REST API and showcases modern Angular architectural patterns, strong typing, and professional code standards.
 
-## Development server
+---
 
-To start a local development server, run:
+## 🚀 Tech Stack
 
-```bash
-ng serve
+- **Core Framework**: Angular v21 (featuring zoneless change detection and modern control flow)
+- **Asynchronous State & Data Streams**: RxJS v7.8
+- **Networking**: Angular HttpClient
+- **Styling**: Vanilla CSS for modular design
+- **Testing & Tooling**:
+  - Unit Tests: Vitest & JSDom (100% code coverage)
+  - Linting: ESLint with `@angular-eslint`
+  - Code Formatting: Prettier
+
+---
+
+## 🏗️ Architecture Flow & Data Binding
+
+The application implements a strict **Service ➔ Container Component ➔ Presentational Component** unidirectional architecture.
+
+```mermaid
+flowchart TD
+    subgraph "Core Services"
+        Service[UserService]
+    end
+    subgraph "Features (User Directory)"
+        Parent[UserListComponent Parent]
+        Child[UserCardComponent Child]
+    end
+
+    API[(JSONPlaceholder API)] -->|HTTP GET users| Service
+    Service -->|Observable Users| Parent
+    Parent -->|Injects Service| Service
+    Parent -->|Data Binding user| Child
+    Child -->|Renders Input user| UI[User Details Card]
+    
+    style Service fill:#f9f,stroke:#333,stroke-width:2px
+    style Parent fill:#bbf,stroke:#333,stroke-width:2px
+    style Child fill:#bfb,stroke:#333,stroke-width:2px
+
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- **Service Layer (`UserService`)**: Centralizes HTTP requests, wraps raw responses in typed models (`User[]`), handles API errors, and exposes clean Observable streams.
+- **Container (Parent) Component (`UserListComponent`)**: Injects the service, manages loading, error, and list state, handles change detection alerts, and orchestrates presentation.
+- **Presentational (Child) Component (`UserCardComponent`)**: Receives data via `@Input()` and renders the user's details inside a styled card. It remains decoupled from API logic, side effects, and state management.
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🛠️ Getting Started
 
+### Installation
+
+Clone the repository and install the dependencies:
 ```bash
-ng generate component component-name
+npm install
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Running the Application
 
+There are two modes to run the application depending on whether you want to see detailed console debug logs:
+
+1. **Development Mode (With Debug Logs)**:
+   Starts a local server with verbose `console.debug` logs enabled for testing user list data fetching and state changes.
+   ```bash
+   npm start
+   ```
+   Open [http://localhost:4200/](http://localhost:4200/) in your browser.
+
+2. **No-Debug Mode (Production Environment)**:
+   Swaps out development configurations via Angular `fileReplacements` to silence verbose console output, simulating a production build environment.
+   ```bash
+   npm run start:no-debug
+   ```
+
+---
+
+## 🧪 Testing and Quality Control
+
+### Run Linter
+Verify code style consistency, unused imports, and Angular best practices:
 ```bash
-ng generate --help
+npm run lint
 ```
 
-## Building
-
-To build the project run:
-
+### Run Unit Tests
+Run the Vitest test runner to verify logic correctness:
 ```bash
-ng build
+npm test
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
+### Run Test Coverage
+Check test coverage metrics (which are maintained at 100%):
 ```bash
-ng test
+npm run test:coverage
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
+### Build Production Bundle
+Compile and build optimized artifacts under `dist/angular-user-directory/`:
 ```bash
-ng e2e
+npm run build
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+---
 
-## Additional Resources
+## 📋 User Data Schema
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+The application maps endpoint data to the following strongly-typed `User` schema structure:
+
+```typescript
+export interface Geo {
+  lat: string;
+  lng: string;
+}
+
+export interface Address {
+  street: string;
+  suite: string;
+  city: string;
+  zipcode: string;
+  geo: Geo;
+}
+
+export interface Company {
+  name: string;
+  catchPhrase: string;
+  bs: string;
+}
+
+export interface User {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  address: Address;
+  phone: string;
+  website: string;
+  company: Company;
+}
+```
+
+---
+
+## 💡 Key Angular Concepts Demonstrated
+
+### 1. Dependency Injection (DI)
+Utilizes the modern functional `inject()` API instead of standard constructor injection for clean, readable, and type-safe DI:
+```typescript
+private userService = inject(UserService);
+private cdr = inject(ChangeDetectorRef);
+```
+
+### 2. Angular Services
+Decoupled business logic inside singleton services annotated with `@Injectable({ providedIn: 'root' })`. It abstracts communication with endpoints from components.
+
+### 3. Observables (RxJS)
+Manages asynchronous network calls reactively. Implements robust pipelines with error propagation via `catchError` and `throwError`:
+```typescript
+getUsers(): Observable<User[]> {
+    return this.httpClient.get<User[]>(this.apiUrl)
+        .pipe(
+            catchError((error) => {
+                return throwError(() => new Error('Unable to load user data.'));
+            })
+        );
+}
+```
+
+### 4. Parent-to-Child Communication (`@Input`)
+Passes structured objects down the tree via `@Input()`, ensuring strong encapsulation of presentational components:
+```typescript
+export class UserCardComponent {
+  @Input() user?: User;
+}
+```
+
+### 5. Component Composition & Control Flow
+Leverages Angular's modern block-based control flow syntax (`@if`, `@for`, `@else`) in templates for clean DOM rendering without structural directives like `*ngIf` or `*ngFor`.

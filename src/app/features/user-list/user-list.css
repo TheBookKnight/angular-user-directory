@@ -1,0 +1,13 @@
+.user-list-container ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.user-list-container li {
+  margin: 0;
+  padding: 0;
+}

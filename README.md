@@ -23,19 +23,19 @@ The application implements a strict **Service ➔ Container Component ➔ Presen
 
 ```mermaid
 flowchart TD
-    subgraph Core Services
+    subgraph "Core Services"
         Service[UserService]
     end
-    subgraph Features (User Directory)
-        Parent[UserListComponent <br/> Container / Parent Component]
-        Child[UserCardComponent <br/> Presentational / Child Component]
+    subgraph "Features (User Directory)"
+        Parent["UserListComponent <br/> Container / Parent Component"]
+        Child["UserCardComponent <br/> Presentational / Child Component"]
     end
 
     API[(JSONPlaceholder API)] -->|HTTP GET /users| Service
-    Service -->|Observable&lt;User[]&gt;| Parent
+    Service -->|"Observable<User[]>"| Parent
     Parent -->|Injects via inject()| Service
     Parent -->|Data Binding: [user]='user'| Child
-    Child -->|Renders via @Input() user| UI[User Details Card]
+    Child -->|Renders via @Input() user| UI["User Details Card"]
     
     style Service fill:#f9f,stroke:#333,stroke-width:2px
     style Parent fill:#bbf,stroke:#333,stroke-width:2px

@@ -4,7 +4,7 @@
  * The UserList component is a feature component that displays a list of users fetched 
  * from the JsonPlaceholder API.
  */
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../../models/user.model';
 
@@ -16,6 +16,7 @@ import { User } from '../../../models/user.model';
 })
 export class UserListComponent implements OnInit {
   private userService = inject(UserService);
+  private cdr = inject(ChangeDetectorRef);
 
   users: User[] = [];
   errorMessage = '';
@@ -25,10 +26,12 @@ export class UserListComponent implements OnInit {
     this.userService.getUsers().subscribe({
       next: (users) => {
         this.users = users;
+        this.cdr.markForCheck();
         console.log('Loaded users:', users);
       },
       error: (err) => {
         this.errorMessage = err.message || 'Failed to load users';
+        this.cdr.markForCheck();
         console.error(err);
       }
     });

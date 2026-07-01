@@ -4,6 +4,10 @@
 start:
 	ng serve
 
+# Runs tests
+test:
+	ng test
+
 # Builds the project
 build:
 	ng build

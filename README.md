@@ -17,6 +17,37 @@ A clean, production-ready Angular application demonstrating directory search and
 
 ---
 
+## 🏗️ Architecture Flow & Data Binding
+
+The application implements a strict **Service ➔ Container Component ➔ Presentational Component** unidirectional architecture.
+
+```mermaid
+flowchart TD
+    subgraph Core Services
+        Service[UserService]
+    end
+    subgraph Features (User Directory)
+        Parent[UserListComponent <br/> Container / Parent Component]
+        Child[UserCardComponent <br/> Presentational / Child Component]
+    end
+
+    API[(JSONPlaceholder API)] -->|HTTP GET /users| Service
+    Service -->|Observable&lt;User[]&gt;| Parent
+    Parent -->|Injects via inject()| Service
+    Parent -->|Data Binding: [user]='user'| Child
+    Child -->|Renders via @Input() user| UI[User Details Card]
+    
+    style Service fill:#f9f,stroke:#333,stroke-width:2px
+    style Parent fill:#bbf,stroke:#333,stroke-width:2px
+    style Child fill:#bfb,stroke:#333,stroke-width:2px
+```
+
+- **Service Layer (`UserService`)**: Centralizes HTTP requests, wraps raw responses in typed models (`User[]`), handles API errors, and exposes clean Observable streams.
+- **Container (Parent) Component (`UserListComponent`)**: Injects the service, manages loading, error, and list state, handles change detection alerts, and orchestrates presentation.
+- **Presentational (Child) Component (`UserCardComponent`)**: Receives data via `@Input()` and renders the user's details inside a styled card. It remains decoupled from API logic, side effects, and state management.
+
+---
+
 ## 🛠️ Getting Started
 
 ### Installation
@@ -73,25 +104,41 @@ npm run build
 
 ---
 
-## 🏗️ Architecture
+## 📋 User Data Schema
 
-The application implements a strict **Service ➔ Container Component ➔ Presentational Component** unidirectional architecture:
+The application maps endpoint data to the following strongly-typed `User` schema structure:
 
-```mermaid
-graph TD
-    API[(JSONPlaceholder API)]
-    Service[UserService]
-    Container[UserListComponent]
-    Presentational[UserCardComponent]
+```typescript
+export interface Geo {
+  lat: string;
+  lng: string;
+}
 
-    API -->|HTTP GET /users| Service
-    Service -->|Observable<User[]>| Container
-    Container -->|@Input() user| Presentational
+export interface Address {
+  street: string;
+  suite: string;
+  city: string;
+  zipcode: string;
+  geo: Geo;
+}
+
+export interface Company {
+  name: string;
+  catchPhrase: string;
+  bs: string;
+}
+
+export interface User {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  address: Address;
+  phone: string;
+  website: string;
+  company: Company;
+}
 ```
-
-1. **Service Layer (`UserService`)**: Centralizes HTTP requests, wraps raw responses in typed models (`User[]`), handles API errors, and exposes clean Observable streams.
-2. **Container (Parent) Component (`UserListComponent`)**: Injects the service, manages loading, error, and list state, handles change detection alerts, and orchestrates presentation.
-3. **Presentational (Child) Component (`UserCardComponent`)**: Receives data via `@Input()` and renders the user's details inside a styled card. It remains decoupled from API logic, side effects, and state management.
 
 ---
 

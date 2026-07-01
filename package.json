@@ -8,6 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
+    "lint:coverage": "ng lint --coverage",
     "lint:fix": "ng lint --fix",
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui"

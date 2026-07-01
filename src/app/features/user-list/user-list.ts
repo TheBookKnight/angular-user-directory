@@ -27,7 +27,7 @@ export class UserListComponent implements OnInit {
       next: (users) => {
         this.users = users;
         this.cdr.markForCheck();
-        console.log('Loaded users:', users);
+        console.debug('Loaded users:', users);
       },
       error: (err) => {
         this.errorMessage = err.message || 'Failed to load users';

@@ -7,8 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "test:coverage": "ng test --coverage --watch=false",
     "lint": "ng lint",
-    "lint:coverage": "ng lint --coverage",
     "lint:fix": "ng lint --fix",
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui"
@@ -31,6 +31,7 @@
     "@angular/compiler-cli": "^21.2.0",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.61.1",
+    "@vitest/coverage-v8": "^4.1.9",
     "angular-eslint": "21.4.0",
     "eslint": "^10.3.0",
     "jsdom": "^28.0.0",

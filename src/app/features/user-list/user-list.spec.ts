@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { UserListComponent } from './user-list';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../../models/user.model';
@@ -23,14 +23,23 @@ describe('UserListComponent', () => {
 
     fixture = TestBed.createComponent(UserListComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
+    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
-  it('should load users on init', () => {
+  it('should display loading message when users are empty', () => {
+    mockUserService.getUsers = () => of([]);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const loadingElement = compiled.querySelector('p');
+    expect(loadingElement?.textContent).toContain('Loading users...');
+  });
+
+  it('should load and render users on init', () => {
     const mockUsers: User[] = [
       {
         id: 1,
@@ -45,9 +54,25 @@ describe('UserListComponent', () => {
     ];
 
     mockUserService.getUsers = () => of(mockUsers);
-
-    component.ngOnInit();
+    fixture.detectChanges();
 
     expect(component.users).toEqual(mockUsers);
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const listItems = compiled.querySelectorAll('li');
+    expect(listItems.length).toBe(1);
+    expect(listItems[0].textContent).toContain('Alice (alice@example.com)');
+  });
+
+  it('should handle error and display error message when loading fails', () => {
+    const errorResponse = new Error('Failed to fetch users');
+    mockUserService.getUsers = () => throwError(() => errorResponse);
+    fixture.detectChanges();
+
+    expect(component.errorMessage).toBe('Failed to fetch users');
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const errorElement = compiled.querySelector('.error');
+    expect(errorElement?.textContent).toContain('Failed to fetch users');
   });
 });

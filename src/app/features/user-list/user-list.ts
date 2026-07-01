@@ -7,6 +7,7 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../../models/user.model';
+import { environment } from '../../../environments/environment.local';
 @Component({
   selector: 'app-user-list',
   standalone: false,
@@ -29,13 +30,17 @@ export class UserListComponent implements OnInit {
         this.users = users;
         this.isLoading = false;
         this.cdr.markForCheck();
-        console.debug('Loaded users:', users);
+        if (environment.enableDebugLogs) {
+          console.debug('Loaded users:', users);
+        }
       },
       error: (err) => {
         this.errorMessage = err.message || 'Failed to load users';
         this.isLoading = false;
         this.cdr.markForCheck();
-        console.error(err);
+        if (environment.enableDebugLogs) {
+          console.debug('User list load error:', err);
+        }
       }
     });
   }

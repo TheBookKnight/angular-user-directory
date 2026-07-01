@@ -82,9 +82,8 @@ describe('UserService', () => {
   it('should propagate error when the API request fails', () => {
     service.getUsers().subscribe({
       next: () => expect.fail('should have failed with a 500 error'),
-      error: (error) => {
-        expect(error.status).toBe(500);
-        expect(error.statusText).toBe('Internal Server Error');
+      error: (error: Error) => {
+        expect(error.message).toBe('Unable to load user data. Please try again later.');
       }
     });
 

@@ -1,8 +1,8 @@
 import { inject, Injectable } from "@angular/core"
-import { HttpClient } from "@angular/common/http"
+import { HttpClient, HttpErrorResponse } from "@angular/common/http"
 import { environment } from "../../../../environment"
 import { User } from "../../../models/user.model"
-import { Observable } from "rxjs";
+import { Observable, catchError, throwError } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -13,9 +13,16 @@ export class UserService {
 
     /**
      * Retrieves a list of users from the API.
+     * Logs network errors and propagates a user-friendly error message.
      * @returns An Observable of an array of User objects.
      */
     getUsers(): Observable<User[]> {
         return this.httpClient.get<User[]>(this.apiUrl)
+            .pipe(
+                catchError((error: HttpErrorResponse) => {
+                    console.error('JsonPlaceholder API error fetching users:', error);
+                    return throwError(() => new Error('Unable to load user data. Please try again later.'));
+                })
+            );
     }
 }

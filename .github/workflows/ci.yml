@@ -24,7 +24,24 @@ jobs:
         run: npm run lint
 
       - name: Run unit tests
-        run: npm test
+        run: npm run test:coverage
+
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright binaries
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
+
+      - name: Install Playwright browsers and dependencies
+        run: npx playwright install chromium --with-deps
+
+      - name: Run E2E tests
+        run: npm run e2e
 
       - name: Run production build
         run: npm run build

@@ -1,0 +1,13 @@
+<div class="user-list-container">
+  @if (errorMessage) {
+    <p class="error">{{ errorMessage }}</p>
+  } @else if (users.length === 0) {
+    <p>Loading users...</p>
+  } @else {
+    <ul>
+      @for (user of users; track user.id) {
+        <li>{{ user.name }} ({{ user.email }})</li>
+      }
+    </ul>
+  }
+</div>
